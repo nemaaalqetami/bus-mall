@@ -24,6 +24,8 @@ let nameProduct = [];
 
 const main = document.getElementById('main');
 let button = document.createElement('button');
+button.setAttribute('class','button');
+
 let UnorderList = document.createElement('ul');
 let item ;
 const section = document.getElementById('productSection');
@@ -64,10 +66,7 @@ while(firstIndex===secondtIndex||firstIndex===thirdIndex||secondtIndex===thirdIn
        thirdIndex = randomNumber(0,Product.all.length-1) ;
        }
 
-        Product.all[firstIndex].views++;
-        Product.all[secondtIndex].views++;
-        Product.all[thirdIndex].views++;
-         
+       
     
     const firstRandomProduct = Product.all[firstIndex];
     firstImage.src= firstRandomProduct.path; 
@@ -97,26 +96,30 @@ section.addEventListener('click',getData);
         
         for(let i = 0; i<Product.all.length;i++){
              Product.all[i].votes++;
+            
             if(Product.all[i].name === event.target.title){
         
-            Product.all[i].views++;
+          Product.all[i].views++;  
           
        
-             arr.push(Product.all[i].views)
-            nameProduct.push(event.target.title)
+             arr.push(Product.all[i].views);
+          
+            nameProduct.push(event.target.title);
 
           
              if(Product.all[i].count === Product.all[i].votes){ 
-                 section.removeEventListener('click',getData)
+                 section.removeEventListener('click',getData);
                  button.classList.add('btn');
                  button.textContent='View Result';
+              
                  main.appendChild(button);
                
                  document.querySelector('.btn').addEventListener('click',getItem) ;
+                createChart();
 
 
           }
-           console.log(event.target.title+" "+Product.all[i].views);
+         console.log(event.target.title+" "+Product.all[i].views);
       
         }
        
@@ -151,7 +154,7 @@ function getItem(){
   
         item.innerHTML = nameProduct [i]+ " has " + arr[i]+ " views";  
         UnorderList.appendChild(item);
-    
+        item.setAttribute('class','li');
  
    
         }
@@ -160,7 +163,71 @@ function getItem(){
 main.appendChild(UnorderList)
     }
 
+    function createChart(){
+        let context = document.getElementById('myChart').getContext('2d');
+    
+      let name = [];
+      let views =[];
+        for(let i=0;i<Product.all.length;i++){
+            name.push(Product.all[i].name);
 
+           views.push(Product.all[i].views);
+           
+        }
+      
+        let chartObject={
+         
+          type: 'bar',
+        
+          data: {
+              labels:name,
+              datasets: [{
+                  label: 'Products views results',
+                  backgroundColor: 'rgb(0, 138, 138)',
+                  
+                  data: views,
+              },
+
+            ]
+        
+          },
+      
+         
+          options: {
+           
+            responsive: true,
+            tooltips: {
+                mode: 'single',
+            },
+            scales: {
+              xAxes: [{ 
+                gridLines: {
+                    display: false,
+                },
+                ticks: {
+                    fontColor: "#25af6af3", // this here
+                  },
+            }
+            ],
+
+            yAxes: [{
+                ticks: {
+                    fontColor: "#25af6af3", // this here
+                  },
+               
+                  gridLines: {
+                      display: false,
+                  },
+               
+            }],
+            
+          }
+         
+          }
+      }
+        let chart = new Chart(context,chartObject);
+        
+      }
 render();
 
 
