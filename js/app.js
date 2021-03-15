@@ -18,9 +18,9 @@ let ext =['jpg','jpg','jpg','jpg',
 // 'dog-duck.jpg','dragon.jpg','pen.jpg','pet-sweep.jpg',
 // 'scissors.jpg','shark.jpg','sweep.png','tauntaun.jpg',
 // 'unicorn.jpg','usb.gif','water-can.jpg','wine-glass.jpg',];
-let arr =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+let arr =[];
 
-let nameProduct = ['','','','','','','','','','','','','','','','','','','','','','','',''];
+let nameProduct = [];
 
 const main = document.getElementById('main');
 let button = document.createElement('button');
@@ -36,59 +36,78 @@ function Product(name,imgExt)
 {
     this.name = name;
     this.views = 0;
-    this.count =0; 
+    this.count =25; 
     this.path = `./assets/${name}.${imgExt}`;
-    this.vots =0;
+    this.votes =0;
     Product.all.push(this);
 }
 Product.all=[];
-
+Product.lastShown=[];
 for (let i=0;i<img.length;i++){
     new Product(img[i],ext[i]);
     
 }
 
 function render(){
-    const firstIndex = randomNumber(0,Product.all.length-1) ;
+
+    
+
+
+   let firstIndex = randomNumber(0,Product.all.length-1) ;
+    let secondtIndex = randomNumber(0,Product.all.length-1) ;
+    let thirdIndex = randomNumber(0,Product.all.length-1) ;
+
+while(firstIndex===secondtIndex||firstIndex===thirdIndex||secondtIndex===thirdIndex
+    ||  Product.lastShown.includes(firstIndex)|| Product.lastShown.includes(secondtIndex)|| Product.lastShown.includes(thirdIndex) ){
+       firstIndex = randomNumber(0,Product.all.length-1) ;
+       secondtIndex = randomNumber(0,Product.all.length-1) ;
+       thirdIndex = randomNumber(0,Product.all.length-1) ;
+       }
+
+        Product.all[firstIndex].views++;
+        Product.all[secondtIndex].views++;
+        Product.all[thirdIndex].views++;
+         
+    
     const firstRandomProduct = Product.all[firstIndex];
     firstImage.src= firstRandomProduct.path; 
      firstImage.title = firstRandomProduct.name;
      firstImage.alt = firstRandomProduct.name;
+     Product.lastShown[0]=firstIndex;
 
-
-
-     const secondIndex = randomNumber(0,Product.all.length-1) ;
-   
-     const secondRandomProduct = Product.all[secondIndex];
+    
+    const secondRandomProduct = Product.all[secondtIndex];
        secondtImage.src = secondRandomProduct.path; 
       secondtImage.title = secondRandomProduct.name;
       secondtImage.alt = secondRandomProduct.name;
-
-    const thirdIndex = randomNumber(0,Product.all.length-1) ;
+     Product.lastShown[1]= secondtIndex;
+    
     const thirdRandomProduct= Product.all[thirdIndex];
     thirdImage.src = thirdRandomProduct.path;
     thirdImage.alt = thirdRandomProduct.name;
     thirdImage.title = thirdRandomProduct.name;
+     Product.lastShown[2]=thirdIndex;
 
 }
 
-section.addEventListener('click',function(event){
+section.addEventListener('click',getData);
     
-    
-         
-         
-    if(event.target.id!=='productSection'){
+    function getData(event){
+        if(event.target.id!=='productSection'){
         
         for(let i = 0; i<Product.all.length;i++){
-             Product.all[i].count++;
+             Product.all[i].votes++;
             if(Product.all[i].name === event.target.title){
-           Product.all[i].vots++ ;
+        
             Product.all[i].views++;
-             arr[i]=Product.all[i].views
-                    nameProduct[i]= event.target.title
           
-             if(Product.all[i].count === 25){ 
-               
+       
+             arr.push(Product.all[i].views)
+            nameProduct.push(event.target.title)
+
+          
+             if(Product.all[i].count === Product.all[i].votes){ 
+                 section.removeEventListener('click',getData)
                  button.classList.add('btn');
                  button.textContent='View Result';
                  main.appendChild(button);
@@ -97,19 +116,24 @@ section.addEventListener('click',function(event){
 
 
           }
-           
-        
+           console.log(event.target.title+" "+Product.all[i].views);
+      
         }
        
             }
+       
              render();
-   
+         
         } 
         
  
  
-    }) 
+    }
 
+   
+         
+         
+    
  main.appendChild(UnorderList);
 function randomNumber(min,max){
    
@@ -121,7 +145,7 @@ function randomNumber(min,max){
 function getItem(){
  
                           
-    for(let i = 0; i < nameProduct.length-5 ; i++){
+    for(let i = 0; i <25 ; i++){
     
         item = document.createElement('li');
   
