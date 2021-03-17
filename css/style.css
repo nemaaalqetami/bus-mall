@@ -14,15 +14,15 @@ border: rgb(0, 138, 138) solid 15px;
 
 
 .button {
-    position: relative;
+    /* position: relative;
   bottom: 2188px;
-right: 15px;
+right: 15px; */
    background-color: darkcyan;
    color: white;
    border-radius: 20px;
    width: 10%;
    height: 50px;
-   float: right;
+   
 }
 
 .li{

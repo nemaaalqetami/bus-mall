@@ -41,6 +41,7 @@ function Product(name,imgExt)
     this.path = `./assets/${name}.${imgExt}`;
     this.votes =0;
     Product.all.push(this);
+   
     
 }
 Product.all=[];
@@ -110,6 +111,7 @@ while(firstIndex===secondIndex||firstIndex===thirdIndex||secondIndex===thirdInde
 section.addEventListener('click',getData);
     
     function getData(event){
+      
         if(event.target.id!=='productSection'){
        
         for(let i = 0; i<Product.all.length;i++){
@@ -123,20 +125,22 @@ section.addEventListener('click',getData);
              votes.push(Product.all[i].votes);
           
             nameProduct.push(event.target.title);
-            
+             
           
              if(Product.all[i].count === 25){ 
                  section.removeEventListener('click',getData);
+                
                  button.classList.add('btn');
                  button.textContent='View Result';
-              
                  main.appendChild(button);
                
-                 document.querySelector('.btn').addEventListener('click',getItem) ;
+                 document.querySelector('.btn').addEventListener('click',getList) ;
+                
 
-                 for(let i = 0;i<Product.all.length;i++){
-                   allViews.push(Product.all[i].views);
+                 for(let i = 0; i< Product.all.length; i++){
+                  allViews.push(Product.all[i].views);
                  }
+                 localStorage.setItem('nemaa',JSON.stringify(Product.all));
                 createChart();
 
 
@@ -146,12 +150,12 @@ section.addEventListener('click',getData);
         }
        
             }
-       
+           
              render();
          
         } 
         
- 
+
  
     }
 
@@ -159,7 +163,7 @@ section.addEventListener('click',getData);
          
          
     
- main.appendChild(UnorderList);
+
 function randomNumber(min,max){
    
     
@@ -167,22 +171,30 @@ function randomNumber(min,max){
 }
 
 
-function getItem(){
- 
-                          
-    for(let i = 0; i <allViews.length; i++){
-   
+function getList(){
+  
+  // getListItem();
+
+    for(let i = 0; i< Product.all.length; i++){ 
+      
+     Product.all[i].count=0
+  
+
         item = document.createElement('li');
- 
+       
+        
+        item = document.createElement('li');
         item.innerText = nameProduct [i]+ " has " + votes[i]+ " Votes, " + allViews[i] + " views";  
         UnorderList.appendChild(item);
         item.setAttribute('class','li');
- 
+           
    
         }
-        
+      // section.addEventListener('click',getData);
+ 
+main.appendChild(UnorderList);
 
-main.appendChild(UnorderList)
+
     }
 
     function createChart(){
@@ -256,6 +268,14 @@ main.appendChild(UnorderList)
         let chart = new Chart(context,chartObject);
         
       }
+
+
+       function getListItem(){
+        let data = localStorage.getItem('nemaa');
+        data  =JSON.parse(data);
+        return data;
+       }
+
 render();
 
 
