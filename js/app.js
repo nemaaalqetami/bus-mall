@@ -36,8 +36,7 @@ const thirdImage = document.getElementById('thirdimage');
 function Product(name,imgExt)
 {
     this.name = name;
-    this.views = 0;
-    this.count =0; 
+    this.views = 0; 
     this.path = `./assets/${name}.${imgExt}`;
     this.votes =0;
     Product.all.push(this);
@@ -46,14 +45,16 @@ function Product(name,imgExt)
 }
 Product.all=[];
 Product.lastShown=[];
-for (let i=0;i<img.length;i++){
+
+  for (let i=0;i<img.length;i++){
     new Product(img[i],ext[i]);
     
 }
+
   
 
 
-
+console.log(Product.all.length);
 function render(){
 
  let firstIndex = randomNumber(0,Product.all.length-1) ;
@@ -108,14 +109,17 @@ while(firstIndex===secondIndex||firstIndex===thirdIndex||secondIndex===thirdInde
    
 }
 
-section.addEventListener('click',getData);
+let count  = 0;
+
+if(localStorage.length == 0){
+  section.addEventListener('click',getData);
     
     function getData(event){
       
         if(event.target.id!=='productSection'){
-       
+        count++;
         for(let i = 0; i<Product.all.length;i++){
-            Product.all[i].count++;
+           
             
             if(Product.all[i].name === event.target.title){
         
@@ -127,7 +131,7 @@ section.addEventListener('click',getData);
             nameProduct.push(event.target.title);
              
           
-             if(Product.all[i].count === 25){ 
+             if(count === 25){ 
                  section.removeEventListener('click',getData);
                 
                  button.classList.add('btn');
@@ -135,11 +139,11 @@ section.addEventListener('click',getData);
                  main.appendChild(button);
                
                  document.querySelector('.btn').addEventListener('click',getList) ;
-                
 
                  for(let i = 0; i< Product.all.length; i++){
                   allViews.push(Product.all[i].views);
                  }
+                       
                  localStorage.setItem('nemaa',JSON.stringify(Product.all));
                 createChart();
 
@@ -148,7 +152,7 @@ section.addEventListener('click',getData);
       
       
         }
-       
+        
             }
            
              render();
@@ -173,11 +177,12 @@ function randomNumber(min,max){
 
 function getList(){
   
-  // getListItem();
+ 
 
     for(let i = 0; i< Product.all.length; i++){ 
-      
-     Product.all[i].count=0
+     
+    
+   
   
 
         item = document.createElement('li');
@@ -190,8 +195,7 @@ function getList(){
            
    
         }
-      // section.addEventListener('click',getData);
- 
+     
 main.appendChild(UnorderList);
 
 
@@ -270,16 +274,188 @@ main.appendChild(UnorderList);
       }
 
 
-       function getListItem(){
-        let data = localStorage.getItem('nemaa');
-        data  =JSON.parse(data);
-        return data;
-       }
+    
 
 render();
 
 
-  
+
+}else{
+
+  let count =0;
+  Product.all = JSON.parse(localStorage.getItem('nemaa'));
+  console.log(Product.all);
+
+  section.addEventListener('click',getData);
     
+    function getData(event){
+      
+        if(event.target.id!=='productSection'){
+          count ++;
+        for(let i = 0; i<Product.all.length;i++){
+            
+            
+            if(Product.all[i].name === event.target.title){
+        
+          Product.all[i].votes++;  
+         
+   
+             votes.push(Product.all[i].votes);
+          
+            nameProduct.push(event.target.title);
+             
+          
+             if(count === 25){ 
+                 section.removeEventListener('click',getData);
+                
+                 button.classList.add('btn');
+                 button.textContent='View Result';
+                 main.appendChild(button);
+               
+                 document.querySelector('.btn').addEventListener('click',getList) ;
+
+                 for(let i = 0; i< Product.all.length; i++){
+                  allViews.push(Product.all[i].views);
+                 }
+                       
+                 localStorage.setItem('nemaa',JSON.stringify(Product.all));
+                createChart();
+
+
+          }
+      
+      
+        }
+        
+            }
+           
+             render();
+         
+        } 
+        
+
+ 
+    }
+
+   
+         
+         
+    
+
+function randomNumber(min,max){
+   
+    
+  return Math.floor(Math.random() * (max - min + 1 )+ min);
+}
+
+
+function getList(){
+  
+ 
+
+    for(let i = 0; i< Product.all.length; i++){ 
      
     
+   
+  
+
+        item = document.createElement('li');
+       
+        
+        item = document.createElement('li');
+        item.innerText = nameProduct [i]+ " has " + votes[i]+ " Votes, " + allViews[i] + " views";  
+        UnorderList.appendChild(item);
+        item.setAttribute('class','li');
+           
+   
+        }
+     
+main.appendChild(UnorderList);
+
+
+    }
+
+    function createChart(){
+        let context = document.getElementById('myChart').getContext('2d');
+    
+      let name = [];
+      let votes =[];
+    
+        for(let i=0;i<Product.all.length;i++){
+            name.push(Product.all[i].name);
+
+           votes.push(Product.all[i].votes);
+         
+        }
+      
+        let chartObject={
+         
+          type: 'horizontalBar',
+        
+          data: {
+              labels:name,
+              datasets: [{
+                  label: 'Products votes results',
+                  backgroundColor: 'rgb(0, 138, 138)',
+                  
+                  data: votes
+              },
+              {
+                label : 'Products views results',
+                backgroundColor: 'rgb(37, 214, 214)',
+                data : allViews
+              }
+
+            ]
+        
+          },
+      
+         
+          options: {
+           
+            responsive: true,
+            tooltips: {
+                mode: 'single',
+            },
+            scales: {
+              xAxes: [{ 
+                gridLines: {
+                    display: false,
+                },
+                ticks: {
+                    fontColor: "#25af6af3", // this here
+                  },
+            }
+            ],
+
+            yAxes: [{
+                ticks: {
+                    fontColor: "#25af6af3", // this here
+                  },
+               
+                  gridLines: {
+                      display: false,
+                  },
+               
+            }],
+            
+          }
+         
+          }
+      }
+        let chart = new Chart(context,chartObject);
+        
+      }
+
+
+    
+
+
+
+
+  render();
+  
+}
+    
+     
+  
