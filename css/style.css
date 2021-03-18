@@ -9,7 +9,8 @@ img{
     height: 25%;
 margin: 40Px;
 margin-top: 30px;
-border: rgb(0, 138, 138) solid 15px;
+border: rgb(37, 214, 214)solid 10px;
+
 }
 
 
@@ -17,8 +18,8 @@ border: rgb(0, 138, 138) solid 15px;
     /* position: relative;
   bottom: 2188px;
 right: 15px; */
-   background-color: darkcyan;
-   color: white;
+   background-color: white ;
+   color: rgb(37, 214, 214);
    border-radius: 20px;
    width: 10%;
    height: 50px;
@@ -27,7 +28,7 @@ right: 15px; */
 
 .li{
     display: inline-block;
-    color: darkcyan;
+    color: black;
     margin: 30px;
     padding: 20px;
     font-size: larger;
